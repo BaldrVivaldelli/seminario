@@ -9,7 +9,7 @@ export class PerifericosService {
 
   getAllDispositivos() {
     // post the data to Express y devuelve algo
-    return this.http.get('http://192.168.0.151:8081/customers').subscribe(data => {
+    return this.http.get('http://localhost:8081/customers').subscribe(data => {
         console.log(data, " esto viene del server")
       });
   }
