@@ -9,12 +9,19 @@ import org.springframework.cloud.gateway.filter.ratelimit.RedisRateLimiter;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.data.redis.connection.SortParameters.Order;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsWebFilter;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 
 @EnableWebFluxSecurity
@@ -62,7 +69,7 @@ public class GatewayServicesApplication {
 	@Bean
 	SecurityWebFilterChain springWebFilterChain(ServerHttpSecurity http) throws Exception {
 		return http.httpBasic().and()
-				.csrf().disable()
+				.addFilterAt(corsWebFilter(), SecurityWebFiltersOrder.CSRF)
 				.authorizeExchange()
 				.pathMatchers("/fdma/**").authenticated()
 				.anyExchange().permitAll()
@@ -78,6 +85,19 @@ public class GatewayServicesApplication {
 		return new MapReactiveUserDetailsService(user);
 	}
 	
+	@Bean
+	CorsWebFilter corsWebFilter() {
+
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);
+		config.addAllowedOrigin("http://localhost:4200");
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return new CorsWebFilter(source);
+	}
 	
 	public static void main(String[] args) {
 		SpringApplication.run(GatewayServicesApplication.class, args);
