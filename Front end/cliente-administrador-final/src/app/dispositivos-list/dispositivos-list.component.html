@@ -1,0 +1,9 @@
+<section>
+    <header class="major">
+        <h2>PANTALLAS</h2>
+    </header>
+    <div *ngFor="let dispositivo of dispositivos | async">
+
+        <app-dispositivo [dispositivo]="dispositivo" class="posts"></app-dispositivo>
+    </div>
+</section>
