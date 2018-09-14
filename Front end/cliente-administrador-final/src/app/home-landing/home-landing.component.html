@@ -1,0 +1,46 @@
+<nz-layout>
+    <nz-sider nzCollapsible [(nzCollapsed)]="isCollapsed" [nzTrigger]="triggerTemplate">
+        <div class="logo">
+        </div>
+        <ul nz-menu [nzTheme]="'dark'" [nzMode]="'inline'" [nzInlineCollapsed]="isCollapsed">
+            <li nz-submenu>
+                <span title><i class="anticon anticon-user"></i><span class="nav-text">Usuario</span></span>
+                <ul>
+                    <li nz-menu-item>Tom</li>
+                    <li nz-menu-item>Bill</li>
+                    <li nz-menu-item>Alex</li>
+                </ul>
+            </li>
+            <li nz-submenu>
+                <span title><i class="anticon anticon-file"></i><span class="nav-text">Dispositivos</span></span>
+                <ul>
+                    <div *ngFor="let d of dispositivos | async">
+                        <li nz-menu-item>{{d.title}}</li>
+                    </div>
+                </ul>
+            </li>
+
+        </ul>
+    </nz-sider>
+    <nz-layout>
+        <nz-header style="background: #fff; padding:0;">
+            <i class="anticon trigger" [class.anticon-menu-fold]="!isCollapsed" [class.anticon-menu-unfold]="isCollapsed" (click)="isCollapsed=!isCollapsed"></i>
+        </nz-header>
+        <nz-content style="margin:0 16px;">
+            <nz-breadcrumb style="margin:16px 0;">
+                <nz-breadcrumb-item>User</nz-breadcrumb-item>
+                <nz-breadcrumb-item>Augusto</nz-breadcrumb-item>
+            </nz-breadcrumb>
+
+            <div style="padding:24px; background: #fff; min-height: 360px;">
+
+                <app-dispositivos-list></app-dispositivos-list>
+
+            </div>
+        </nz-content>
+        <nz-footer style="text-align: center;">Back Office </nz-footer>
+    </nz-layout>
+</nz-layout>
+<ng-template #trigger>
+    <i class="anticon anticon-up"></i>
+</ng-template>
